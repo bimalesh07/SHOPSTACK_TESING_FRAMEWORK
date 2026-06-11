@@ -39,7 +39,7 @@ class ProductPage:
     
     def open_collections_dropdown(self):
         # Visually log operation state for documentation
-        self.logger.info("🗺️ Navigating directly to Electronics catalog context...")
+        self.logger.info("Navigating directly to Electronics catalog context...")
         # 🔥 ULTRA FIX: Direct route jump to skip strict webkit animation locks
         self.driver.get("https://shopstack-ecommerce.vercel.app/collections/electronics")
 
@@ -48,7 +48,7 @@ class ProductPage:
         pass
     
     def click_shop_navigation(self):
-        self.logger.info("🛍️ Clicking SHOP Link From Top Navbar...")
+        self.logger.info("Clicking SHOP Link From Top Navbar...")
         self.wait.until(EC.element_to_be_clickable((By.XPATH, self.link_shop_nav_xpath))).click()
 
     def serach_product(self, item_name):
@@ -59,15 +59,15 @@ class ProductPage:
         box.send_keys("\n")
     
     def click_first_listed_product(self):
-        self.logger.info("👉 Clicking on the first listed Laptop card...")
+        self.logger.info("Clicking on the first listed Laptop card...")
         self.wait.until(EC.element_to_be_clickable((By.XPATH, self.first_laptop_card_xpath))).click()
 
     def click_heart_icon(self):
-        self.logger.info("❤️ Clicking Heart/Wishlist icon as Guest...")
+        self.logger.info("Clicking Heart/Wishlist icon as Guest...")
         self.wait.until(EC.element_to_be_clickable((By.XPATH, self.button_heart_icon_xpath))).click()
 
     def click_secure_checkout(self):
-        self.logger.info("🔒 Clicking Secure Checkout Button...")
+        self.logger.info("Clicking Secure Checkout Button...")
         self.wait.until(EC.element_to_be_clickable((By.XPATH, self.button_secure_checkout_xpath))).click()
     
     def is_login_page_enforced(self):

@@ -32,7 +32,7 @@ class ProductCartPage:
     button_wishlist_heart_xpath = "(//div[contains(@class, 'grid')]//button[contains(@class, 'hover:text-red-500')])[1]"
     text_wishlist_toast_xpath ="//*[contains(text(), 'Added to wishlist!') or contains(text(), 'ADDED TO WISHLIST')]"
 
-    # PRODUCT CARD SELECTION & DETAILS LANDMARK PROOF 🎯
+    # PRODUCT CARD SELECTION & DETAILS LANDMARK PROOF 
     first_product_card_xpath = "//div[@class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6']//a[1]"
     button_secure_checkout_xpath = "//span[normalize-space()='Secure Checkout'] | //button[contains(., 'Checkout')]"
 
@@ -43,19 +43,19 @@ class ProductCartPage:
 
     def navigate_to_shop_page(self):
         self.logger.info("👉 Force-Clicking NAVBAR SHOP link using JavaScript Pipeline...")
-        shop_nav = self.wait.until(EC.presence_of_element_located((By.滿足, self.button_shop_nav_xpath) if hasattr(By, '滿足') else (By.XPATH, self.button_shop_nav_xpath)))
+        shop_nav = self.wait.until(EC.presence_of_element_located((By.XPATH, self.button_shop_nav_xpath) if hasattr(By, '滿足') else (By.XPATH, self.button_shop_nav_xpath)))
         self.driver.execute_script("arguments[0].click();", shop_nav)
         
         try:
             WebDriverWait(self.driver, 9).until(
                 EC.invisibility_of_element_located((By.XPATH, self.loading_spinner_xpath))
             )
-            self.logger.info("🟢 Loader gone! Shop items are now visible on screen.")
+            self.logger.info("Loader gone! Shop items are now visible on screen.")
         except:
-            self.logger.warning("⚠️ Loader sync timeout or page loaded instantly.")
+            self.logger.warning("Loader sync timeout or page loaded instantly.")
     
     def apply_reactive_price_filters(self, min_price, max_price):
-        self.logger.info("⏳ Giving 4 seconds for initial shop layout stabilization...")
+        self.logger.info("Giving 4 seconds for initial shop layout stabilization...")
         time.sleep(4)
         
         self.logger.info("🔍 Expanding Filters panel using Master Combo Xpath...")
@@ -64,37 +64,37 @@ class ProductCartPage:
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", filters_btn)
         time.sleep(1)
         self.driver.execute_script("arguments[0].click();", filters_btn)
-        self.logger.info("🟢 Filters panel toggle clicked successfully.")
+        self.logger.info("Filters panel toggle clicked successfully.")
         time.sleep(2.5) 
 
-        # 1️⃣ INPUT MIN PRICE
+        #INPUT MIN PRICE
         min_field = self.wait.until(EC.presence_of_element_located((By.XPATH, self.textbox_min_price_xpath)))
         min_field.clear()
         min_field.send_keys(min_price)
-        self.logger.info(f"📥 Min Price set to: {min_price}")
+        self.logger.info(f"Min Price set to: {min_price}")
 
-        # 🔄 WAITING FOR LOADER TO SYNC & CLEAR
-        self.logger.info("⏳ Min input completed. Waiting for dynamic reactive loader to sync and clear...")
+        #WAITING FOR LOADER TO SYNC & CLEAR
+        self.logger.info("Min input completed. Waiting for dynamic reactive loader to sync and clear...")
         time.sleep(1.5) 
         
         try:
             WebDriverWait(self.driver, 10).until(
                 EC.invisibility_of_element_located((By.XPATH, self.loading_spinner_xpath))
             )
-            self.logger.info("🟢 Reactive page filter update loader disappeared safely.")
+            self.logger.info("Reactive page filter update loader disappeared safely.")
         except:
-            self.logger.warning("⚠️ Reactive loader didn't appear or cleared out instantly.")
+            self.logger.warning("Reactive loader didn't appear or cleared out instantly.")
 
         # 🚗 Strict post-loader breathing space taaki layout completely freeze ho jaye
         self.logger.info("⏳ Giving 3 seconds breathing buffer for DOM initialization post-refresh...")
         time.sleep(3)
 
-        # 2️⃣ INPUT MAX PRICE (With Stale-Element Exception Proof Loop 🛡️)
+        #INPUT MAX PRICE (With Stale-Element Exception Proof Loop )
         self.logger.info("🔍 Entering Stale-Proof Input Loop for Max Price Field...")
         
         for attempt in range(1, 4): # 3 baar fresh re-try maarega agar stale aaya toh
             try:
-                self.logger.info(f"🔄 Max Field Entry Attempt {attempt}/3...")
+                self.logger.info(f" Max Field Entry Attempt {attempt}/3...")
                 
                 # Fresh re-catch inside loop
                 max_field = self.wait.until(EC.presence_of_element_located((By.XPATH, self.textbox_max_price_xpath)))
@@ -110,11 +110,11 @@ class ProductCartPage:
                 break # Agar type successfully chal gaya, toh loop se baahar nikal jaao!
                 
             except Exception as e:
-                self.logger.warning(f"⚠️ Attempt {attempt} intercepted by Stale reference or UI block. Retrying in 1.5s...")
+                self.logger.warning(f" Attempt {attempt} intercepted by Stale reference or UI block. Retrying in 1.5s...")
                 time.sleep(1.5)
         else:
             # Agar 3 attempts ke baad bhi fail hua (jo ki nahi hoga), toh error raise karega
-            raise StaleElementReferenceException("❌ Critical Block: Max Price element is continuously unstable.")
+            raise StaleElementReferenceException("Critical Block: Max Price element is continuously unstable.")
         
         time.sleep(4) # Wait for complete filtered dataset array refresh
 
@@ -124,7 +124,7 @@ class ProductCartPage:
         self.logger.info(f"🎯 Attempting UI interaction on sorting element for choice: {choice}")
         dropdown_head = self.wait.until(EC.element_to_be_clickable((By.XPATH, self.button_sort_dropdown_xpath)))
         self.driver.execute_script("arguments[0].click();", dropdown_head)
-        self.logger.info("🟢 Main dropdown element clicked and options list expanded.")
+        self.logger.info("Main dropdown element clicked and options list expanded.")
         time.sleep(1)
 
         if choice.lower() == "low to high":
@@ -140,7 +140,7 @@ class ProductCartPage:
             target_xpath = self.option_oldest_first_xpath
             self.logger.info("Target Option Set: OLDEST FIRST")
         else:
-            raise ValueError(f"❌ Invalid sorting choice string dispatched: {choice}")
+            raise ValueError(f"Invalid sorting choice string dispatched: {choice}")
 
         target_option_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, target_xpath)))
         self.driver.execute_script("arguments[0].click();", target_option_element)
@@ -149,7 +149,7 @@ class ProductCartPage:
         time.sleep(3)
         
     def click_wishlist_heart_and_capture_toast(self):
-        self.logger.info("❤️ Clicking Wishlist Heart button...")
+        self.logger.info("Clicking Wishlist Heart button...")
         heart_btn = self.wait.until(EC.element_to_be_clickable((By.XPATH, self.button_wishlist_heart_xpath)))
         
         # 🟢 FIX: Normal click ki jagah standard Python click try karte hain pehle
@@ -168,7 +168,7 @@ class ProductCartPage:
             # [0] lagakar strictly pehla button JavaScript ko diya, isse JavascriptException kabhi nahi aayega
             self.driver.execute_script("arguments[0].click();", heart_buttons[0])
         else:
-            self.logger.error("❌ No heart buttons found!")
+            self.logger.error("No heart buttons found!")
             return ""
         
         """
@@ -181,7 +181,7 @@ class ProductCartPage:
             capture_msg = toast_bubble.text
             return capture_msg 
         except:
-            self.logger.error("❌ Failed to catch the wishlist success toast.")
+            self.logger.error("Failed to catch the wishlist success toast.")
             return ""
     
     def click_product_to_open_details(self):

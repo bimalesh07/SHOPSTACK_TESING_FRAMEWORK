@@ -4,6 +4,8 @@ import pytest
 import time
 from Utilities.readEnv import ReadEnv
 from API_Endpoints.AuthEndPoints import AuthEndpoints
+from API_Endpoints.ProductEndpoints import ProductEndpoints
+from API_Endpoints.ProductEndpoints import ProductEndpoints
 from Utilities.customLogger import LogGen
 
 # Connecting to your dedicated fresh API logger file (automation_api.log)
@@ -28,6 +30,12 @@ def auth_client():
     base_url = ReadEnv.get_api_base_url()
     logger.info(f"Successfully connected to the live environment at: {base_url}")
     return AuthEndpoints(base_url)
+
+@pytest.fixture(scope="class")
+def product_client():
+    logger.info("Initializing product")
+    base_url = ReadEnv.get_api_base_url()
+    return ProductEndpoints(base_url)
 
 
 # =========================================================================

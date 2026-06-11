@@ -5,7 +5,7 @@ import time
 from Utilities.customLogger import LogGen
 
 class RegistrationPage:
-    # 🎯 Standard Locators
+    #Standard Locators
     Login_btn = "//span[@class='hidden md:block']"
     link_signup_homepage_xpath = "//a[normalize-space()='Sign Up']"
     button_customer_tab_xpath = "//span[normalize-space()='Customer']"
@@ -18,19 +18,19 @@ class RegistrationPage:
     textbox_password_xpath = "//input[@name='password']"
     textbox_confirm_password_xpath = "//input[@name='password2']"
     
-    # 🏪 Extra Vendor Locators
+    #Extra Vendor Locators
     textbox_shop_name_xpath = "//input[@placeholder='Your Shop Name']"
     textbox_shop_desc_xpath = "//textarea[@placeholder='Describe your shop...']"
     textbox_invite_code_xpath = "//input[@placeholder='Invite code (optional)']"
     
-    # 🚀 Dynamic Submit Buttons & Custom Backend Error Box
+    #Dynamic Submit Buttons & Custom Backend Error Box
     button_create_customer_xpath = "//span[normalize-space()='Create Customer Account']"
     button_create_vendor_xpath = "//span[normalize-space()='Create Vendor Account']"
     
     # Custom backend message box (Jaise: Email already exists ya Server error panel)
     text_custom_error_box_xpath = "//div[contains(@class,'text-rose-600')] | //div[contains(@class,'bg-rose-50')]"
     
-    # 🔥 SUCCESS VALIDATION XPATHS: Jo tumne bataye!
+    # SUCCESS VALIDATION XPATHS: Jo tumne bataye!
     success_customer_indicator_xpath = "//button[contains(@class,'rounded-full') and contains(@class,'bg-violet-600')]"
     success_vendor_indicator_xpath = "//span[text()='Add Product'] | //button[contains(.,'Add Product')]"
 
@@ -78,7 +78,7 @@ class RegistrationPage:
             self.logger.info("Clicking Create Vendor Account Button")
             self.wait.until(EC.element_to_be_clickable((By.XPATH, self.button_create_vendor_xpath))).click()
     
-    # 🔥 POWERFUL ERROR HANDLER: Yeh HTML5 Tooltip aur Custom Box dono ka text nikalega
+    #POWERFUL ERROR HANDLER: Yeh HTML5 Tooltip aur Custom Box dono ka text nikalega
     def get_any_validation_error_text(self, field_type="name"):
         # 1. Pehle check karo agar koi browser native HTML5 tooltip pop hua hai (Pic 1, 2, 3)
         try:
@@ -91,7 +91,7 @@ class RegistrationPage:
                 
             browser_error = element.get_attribute("validationMessage")
             if browser_error:
-                self.logger.info(f"⚠️ HTML5 Browser Tooltip caught: {browser_error}")
+                self.logger.info(f"HTML5 Browser Tooltip caught: {browser_error}")
                 return browser_error
         except:
             pass
@@ -100,47 +100,47 @@ class RegistrationPage:
         try:
             custom_error = self.driver.find_element(By.XPATH, self.text_custom_error_box_xpath).text
             if custom_error:
-                self.logger.info(f"⚠️ Custom Div Error caught: {custom_error}")
+                self.logger.info(f"Custom Div Error caught: {custom_error}")
                 return custom_error
         except:
             pass
             
         return ""
     
-    # 🔥 DYNAMIC SUCCESS CHECKER: Jo tumne bataye un elements ko scan karega
+    # DYNAMIC SUCCESS CHECKER: Jo tumne bataye un elements ko scan karega
     def is_registration_successful(self, role_type):
     #   """  try:
     #         if role_type.lower() == "customer":
     #             self.logger.info("🔍 Scanning for Customer Violet Profile Icon safely...")
-    #             # 🔥 FIX: Explicit visibility_of_element_located lagaya taaki DOM load hone ke baad rendering delay handle ho sake
+    #             # FIX: Explicit visibility_of_element_located lagaya taaki DOM load hone ke baad rendering delay handle ho sake
     #             element = self.wait.until(EC.visibility_of_element_located((By.XPATH, self.success_customer_indicator_xpath)))
     #             if element:
-    #                 self.logger.info("🎯 Profile Button render check complete.")
+    #                 self.logger.info("Profile Button render check complete.")
     #                 return True
     #         elif role_type.lower() == "vendor":
-    #             self.logger.info("🔍 Scanning for Vendor 'Add Product' module button...")
+    #             self.logger.info("Scanning for Vendor 'Add Product' module button...")
     #             element = self.wait.until(EC.visibility_of_element_located((By.XPATH, self.success_vendor_indicator_xpath)))
     #             if element:
     #                 return True
     #         return False
     #     except:
-    #         self.logger.error(f"❌ Landing validation component target timed out for role: {role_type}")
+    #         self.logger.error(f"Landing validation component target timed out for role: {role_type}")
     #         return False"""
-          # 🔥 ULTRA HACK: Bina kisi locator ke direct page content verification matrix
+          #ULTRA HACK: Bina kisi locator ke direct page content verification matrix
 
         time.sleep(3) # Safe buffer taaki dashboard text load ho jaye
         try:
             page_text = self.driver.page_source.lower()
             if role_type.lower() == "customer":
                 self.logger.info("🔍 Scanning page source content for Customer markers...")
-                # 🟢 TOAST MATCH ADDED: Agar screen par 'verified' ya 'successfully' ya 'logout' kuch bhi dikha
+                # TOAST MATCH ADDED: Agar screen par 'verified' ya 'successfully' ya 'logout' kuch bhi dikha
                 if "verified" in page_text or "successfully" in page_text or "logout" in page_text:
-                    self.logger.info("🎯 Customer landing confirmed via validation message matrix.")
+                    self.logger.info("Customer landing confirmed via validation message matrix.")
                     return True
               
                 
             elif role_type.lower() == "vendor":
-                self.logger.info("🔍 Scanning page source content for Vendor markers...")
+                self.logger.info("Scanning page source content for Vendor markers...")
                 if "product" in page_text or "logout" in page_text:
                     return True
             return False

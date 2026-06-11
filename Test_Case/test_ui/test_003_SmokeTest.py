@@ -1,6 +1,6 @@
 import time
 from Test_Case.basetest import BaseTest
-from PageObjects.ProductPage import ProductPage
+from PageObjects.HomePage import ProductPage
 from Utilities.customLogger import LogGen
 
 class Test_003_Guest_Smoke_Flows(BaseTest):
