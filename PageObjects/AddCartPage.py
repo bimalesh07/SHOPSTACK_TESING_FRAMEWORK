@@ -33,7 +33,7 @@ class AddCartPage:
             self.logger.warn(f"Normal click intercepted due to: {e}. Switching to JavaScript Click Pipeline...")
             self.driver.execute_script("arguments[0].click();", add_btn)
 
-    def got_toast_message_text(self):
+    def get_toast_message_text(self):
         self.logger.info("Here matching with toast Message ")
         try:
             toast = self.wait.until(EC.presence_of_element_located((By.XPATH, self.Toast_message)))

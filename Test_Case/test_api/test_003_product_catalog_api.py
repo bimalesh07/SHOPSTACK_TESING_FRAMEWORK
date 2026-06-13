@@ -7,13 +7,13 @@ class Test_ShopStack_Products_CataLog_Endpoints:
     
     logger = LogGen.apiloggen()
     
-    # 👑 MASTER FIX 1: Variables ke nam ekdum standard set kiye
+    #MASTER FIX 1: Variables ke nam ekdum standard set kiye
     extracted_product_id = None
     extracted_product_slug = None
     extracted_category_slug = None
 
     # =========================================================================
-    # 1. TEST: FETCH ALL PRODUCTS 📦
+    # 1. TEST: FETCH ALL PRODUCTS 
     # =========================================================================
     def test_prod_01_get_all_products_validation(self, product_client):
         """Public Test: Verify main product catalog loads fine"""
@@ -25,16 +25,16 @@ class Test_ShopStack_Products_CataLog_Endpoints:
         json_data = response.json()
         product_list = json_data.get("results") if isinstance(json_data, dict) else json_data
 
-        assert len(product_list) > 0, "❌ Error: Store is Empty! No products found."
+        assert len(product_list) > 0, "Error: Store is Empty! No products found."
         
-        # 👑 JADU: ID aur Slug dono nikal liye taaki details page fail na ho
+        #ID aur Slug dono nikal liye taaki details page fail na ho
         Test_ShopStack_Products_CataLog_Endpoints.extracted_product_id = product_list[0].get("id")
         Test_ShopStack_Products_CataLog_Endpoints.extracted_product_slug = product_list[0].get("slug")
         
-        self.logger.info(f"✅ Catalog loaded! ID: {Test_ShopStack_Products_CataLog_Endpoints.extracted_product_id} | Slug: {Test_ShopStack_Products_CataLog_Endpoints.extracted_product_slug}")
+        self.logger.info(f"Catalog loaded! ID: {Test_ShopStack_Products_CataLog_Endpoints.extracted_product_id} | Slug: {Test_ShopStack_Products_CataLog_Endpoints.extracted_product_slug}")
 
     # =========================================================================
-    # 2. TEST: PRODUCT DETAILS PAGE 🔍 (404 BYPASS SYSTEM)
+    # 2. TEST: PRODUCT DETAILS PAGE  (404 BYPASS SYSTEM)
     # =========================================================================
     def test_prod_02_get_product_details_by_id(self, product_client):
         """Public Test: Verify single product details using ID/Slug Fallback"""
@@ -45,23 +45,23 @@ class Test_ShopStack_Products_CataLog_Endpoints:
         
         # Pehle database ki raw ID se details feed check karenge
         target = p_id if p_id is not None else p_slug
-        assert target is not None, "❌ Skipping: No live product identifier found."
+        assert target is not None, " Skipping: No live product identifier found."
         
         self.logger.info(f"🎯 Attempting Product Details with Identifier: {target}")
         response = product_client.get_product_by_id(target)
         
         # 🔥 CRITICAL FIX: Agar backend ID par 404 de, toh turant automatic Slug se try karo!
         if response.status_code == 404 and p_slug:
-            self.logger.warning(f"⚠️ ID [{p_id}] returned 404. Activating Fallback! Retrying with Slug: {p_slug}")
+            self.logger.warning(f" ID [{p_id}] returned 404. Activating Fallback! Retrying with Slug: {p_slug}")
             response = product_client.get_product_by_id(p_slug)
-            
-        assert response.status_code == 200, f"❌ Details API Failed! Both ID and Slug returned error."
+                    
+        assert response.status_code == 200, f"Details API Failed! Both ID and Slug returned error."
         
         detail_data = response.json()
-        self.logger.info(f"✅ Product details page verified successfully for Name: {detail_data.get('name')}")
+        self.logger.info(f"Product details page verified successfully for Name: {detail_data.get('name')}")
 
     # =========================================================================
-    # 3. TEST: GET ALL CATEGORIES 📂
+    # 3. TEST: GET ALL CATEGORIES 
     # =========================================================================
     def test_prod_03_get_all_category(self, product_client):
         """Public test: Verify the categories are valid or not"""
@@ -81,10 +81,10 @@ class Test_ShopStack_Products_CataLog_Endpoints:
         assert len(category_list) > 0, "❌ Error: No category available in the system."
         
         Test_ShopStack_Products_CataLog_Endpoints.extracted_category_slug = category_list[0].get("slug") or category_list[0].get("id")
-        self.logger.info(f"✅ Categories loaded! Captured Category Key: {Test_ShopStack_Products_CataLog_Endpoints.extracted_category_slug}")
+        self.logger.info(f"Categories loaded! Captured Category Key: {Test_ShopStack_Products_CataLog_Endpoints.extracted_category_slug}")
 
     # =========================================================================
-    # 4. TEST: FIND PRODUCTS BY CATEGORY 🎯
+    # 4. TEST: FIND PRODUCTS BY CATEGORY
     # =========================================================================
     def test_prod_4_filter_product_by_category(self, product_client):
         """Public Test: Verify filtering products via category query params"""
